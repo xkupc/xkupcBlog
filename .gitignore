@@ -5,5 +5,3 @@ db.json
 node_modules/
 public/
 .deploy*/
-themes/hexo-theme-next/.git
-themes/hexo-theme-next/.github
