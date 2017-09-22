@@ -131,7 +131,7 @@ user.proviceId =331000
     }
 ```
 依旧初始化成功。是时候看一波源码了。
-打开EnableConfigurationProperties，我可以看到他引入一个EnableConfigurationPropertiesImportSelector
+打开EnableConfigurationProperties，我可以看到他引入一个EnableConfigurationPropertiesImportSelector,接下来我们看看这个Selector都做了些啥
 ## ConditionalOnProperty
 ## AutoConfigureBefore 
 
