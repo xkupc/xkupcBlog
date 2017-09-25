@@ -144,10 +144,46 @@ public String[] selectImports(AnnotationMetadata metadata) {
 					ConfigurationPropertiesBindingPostProcessorRegistrar.class
 							.getName() };
 		}
-        //以上面我们的例子，我们配置了@EnableConfigurationProperties(BaseModel.class)//，那么将使用//ConfigurationPropertiesBeanRegistrarConfigurationPropertiesBindingPostProcessorRegistrar
+        //按demo里的例子，我们配置了@EnableConfigurationProperties(BaseModel.class)
+        //则将ConfigurationPropertiesBeanRegistrar和ConfigurationPropertiesBindingPostProcessorRegistrar
         //完成BaseModel与配置属性的映射
 		return new String[] { ConfigurationPropertiesBeanRegistrar.class.getName(),
 				ConfigurationPropertiesBindingPostProcessorRegistrar.class.getName() };
 	}
 ```
-
+我们看ConfigurationPropertiesBeanRegistrar里的方法
+```
+public void registerBeanDefinitions(AnnotationMetadata metadata,
+				BeanDefinitionRegistry registry) {
+			MultiValueMap<String, Object> attributes = metadata
+					.getAllAnnotationAttributes(
+							EnableConfigurationProperties.class.getName(), false);
+			List<Class<?>> types = collectClasses(attributes.get("value"));
+			for (Class<?> type : types) {
+				String prefix = extractPrefix(type);
+				String name = (StringUtils.hasText(prefix) ? prefix + "-" + type.getName()
+						: type.getName());
+				if (!containsBeanDefinition((ConfigurableListableBeanFactory) registry,
+						name)) {
+                    //实际上只做了一件事就是如果配置类（demo里的BaseModel）未被注入容器，则完成配置类的注入
+					registerBeanDefinition(registry, type, name);
+				}
+			}
+		}
+```
+ConfigurationPropertiesBindingPostProcessorRegistrar里的方法
+```
+public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata,
+			BeanDefinitionRegistry registry) {
+		if (!registry.containsBeanDefinition(BINDER_BEAN_NAME)) {
+			BeanDefinitionBuilder meta = BeanDefinitionBuilder
+					.genericBeanDefinition(ConfigurationBeanFactoryMetaData.class);
+            //这里注入了ConfigurationPropertiesBindingPostProcessor
+			BeanDefinitionBuilder bean = BeanDefinitionBuilder.genericBeanDefinition(
+					ConfigurationPropertiesBindingPostProcessor.class);
+			bean.addPropertyReference("beanMetaDataStore", METADATA_BEAN_NAME);
+			registry.registerBeanDefinition(BINDER_BEAN_NAME, bean.getBeanDefinition());
+			registry.registerBeanDefinition(METADATA_BEAN_NAME, meta.getBeanDefinition());
+		}
+	}
+```
