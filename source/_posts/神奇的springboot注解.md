@@ -132,6 +132,22 @@ user.proviceId =331000
 ```
 依旧初始化成功。是时候看一波源码了。
 打开EnableConfigurationProperties，我可以看到他引入一个EnableConfigurationPropertiesImportSelector,接下来我们看看这个Selector都做了些啥
-## ConditionalOnProperty
-## AutoConfigureBefore 
+```
+public String[] selectImports(AnnotationMetadata metadata) {
+		MultiValueMap<String, Object> attributes = metadata.getAllAnnotationAttributes(
+				EnableConfigurationProperties.class.getName(), false);
+        // 获取注解EnableConfigurationProperties里配置的class
+		Object[] type = attributes == null ? null
+				: (Object[]) attributes.getFirst("value");
+		if (type == null || type.length == 0) {
+			return new String[] {
+					ConfigurationPropertiesBindingPostProcessorRegistrar.class
+							.getName() };
+		}
+        //以上面我们的例子，我们配置了@EnableConfigurationProperties(BaseModel.class)//，那么将使用//ConfigurationPropertiesBeanRegistrarConfigurationPropertiesBindingPostProcessorRegistrar
+        //完成BaseModel与配置属性的映射
+		return new String[] { ConfigurationPropertiesBeanRegistrar.class.getName(),
+				ConfigurationPropertiesBindingPostProcessorRegistrar.class.getName() };
+	}
+```
 
