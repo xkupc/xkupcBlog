@@ -178,7 +178,7 @@ public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata,
 		if (!registry.containsBeanDefinition(BINDER_BEAN_NAME)) {
 			BeanDefinitionBuilder meta = BeanDefinitionBuilder
 					.genericBeanDefinition(ConfigurationBeanFactoryMetaData.class);
-            //这里注入了ConfigurationPropertiesBindingPostProcessor
+            //这里注入了ConfigurationPropertiesBindingPostProcessor完成属性与配置的绑定
 			BeanDefinitionBuilder bean = BeanDefinitionBuilder.genericBeanDefinition(
 					ConfigurationPropertiesBindingPostProcessor.class);
 			bean.addPropertyReference("beanMetaDataStore", METADATA_BEAN_NAME);
