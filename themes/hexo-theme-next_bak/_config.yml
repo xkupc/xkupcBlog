@@ -379,7 +379,7 @@ valine:
 
 # Google Webmaster tools verification setting
 # See: https://www.google.com/webmasters/
-#google_site_verification:
+google_site_verification: true
 
 # Google Analytics
 #google_analytics:
@@ -479,7 +479,7 @@ busuanzi_count:
 
 
 # Enable baidu push so that the blog will push the url to baidu automatically which is very helpful for SEO
-baidu_push: false
+baidu_push: true
 
 # Google Calendar
 # Share your recent schedule to others via calendar page
@@ -705,3 +705,8 @@ images: images
 
 # Theme version
 version: 5.1.2
+
+sitemap:
+    path: sitemap.xml
+baidusitemap:
+    path: baidusitemap.xml

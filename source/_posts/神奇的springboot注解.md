@@ -189,4 +189,34 @@ public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata,
 		}
 	}
 ```
-接下来我们看看ConfigurationPropertiesBindingPostProcessor是怎么实现绑定的。
+接下来我们看看ConfigurationPropertiesBindingPostProcessor是怎么实现绑定的。查看了<a href="https://docs.spring.io/spring-boot/docs/1.4.7.RELEASE/api/" target="_blank">springboot的官方api</a>,我们可以看到这样一句话：
+```
+BeanPostProcessor to bind PropertySources to beans annotated with ConfigurationProperties.
+```
+通过BeanPostProcessor接口实现配置资源和实体类的绑定。在ConfigurationPropertiesBindingPostProcessor的方法中，我们只要找到实现了BeanPostProcessor的方法即可找到绑定的实现。ok，我们看到BeanPostProcessor有postProcessBeforeInitialization和postProcessAfterInitialization方法，看方法名我们大概有个模糊的认识，应该是在bean初始化前后的操作。我们看postProcessBeforeInitialization这个方法。
+```
+private void postProcessBeforeInitialization(Object bean, String beanName, ConfigurationProperties annotation) {
+        PropertiesConfigurationFactory<Object> factory = new PropertiesConfigurationFactory(bean);
+        factory.setPropertySources(this.propertySources);
+        factory.setValidator(this.determineValidator(bean));
+        factory.setConversionService(this.conversionService == null ? this.getDefaultConversionService() : this.conversionService);
+        if (annotation != null) {
+            factory.setIgnoreInvalidFields(annotation.ignoreInvalidFields());
+            factory.setIgnoreUnknownFields(annotation.ignoreUnknownFields());
+            factory.setExceptionIfInvalid(annotation.exceptionIfInvalid());
+            factory.setIgnoreNestedProperties(annotation.ignoreNestedProperties());
+            if (StringUtils.hasLength(annotation.prefix())) {
+                factory.setTargetName(annotation.prefix());
+            }
+        }
+
+        try {
+            //很明显，经过一系列校验后，通过加载配置的工厂类完成配置和属性的绑定
+            factory.bindPropertiesToTarget();
+        } catch (Exception var8) {
+            String targetClass = ClassUtils.getShortName(bean.getClass());
+            throw new BeanCreationException(beanName, "Could not bind properties to " + targetClass + " (" + this.getAnnotationDetails(annotation) + ")", var8);
+        }
+    }
+```
+好了，ConfigurationProperties就介绍到这里了，中间还有许多不明白的，源码看的很吃力，还需慢慢努力。属性和配置名不一致也能绑定成功，估计是反射的时候，对配置名做了处理。
