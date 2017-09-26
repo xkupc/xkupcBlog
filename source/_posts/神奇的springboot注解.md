@@ -41,6 +41,7 @@ public class UserConfig {
         System.out.println(baseModel.toString);
     }
 ```
+很简单的demo，结果是baseModel按配置文件初始化了。
 ## ConfigurationProperties、EnableConfigurationProperties
 有了上面Configuration的基础，我们来看看ConfigurationProperties是做了些啥呢。
 修改一下baseModel实体类和UserConfig配置类
@@ -103,6 +104,7 @@ public class BaseModel{
 public class UserConfig {
 }
 ```
+测试结果依旧是baseModel按配置初始化成功
 当我把baseModel里的get、set方法删除时，就初始化不了，很明显，这里依旧还是反射，看官们可能觉得你也可以这么做，容我贴一下我的配置文件：
 ```
 user.user-name = test
@@ -110,10 +112,10 @@ user.user-age = 12
 user.cityId = 330600
 user.proviceId =331000
 ```
-就问你惊不惊喜，意不意外。属性的key与baseModel里的属性名没有直接映射。如果我在baseModel里增加另一个类的依赖呢。
+就问你惊不惊喜，意不意外。属性的key与baseModel里的属性名没有直接映射，springboot支持“-”别名映射。如果我在baseModel里增加另一个类的依赖呢。
 ```
 
-  //新增实体类
+  //在BaseModel里新增一个实体类属性
   private UserCompany workCompany;
 
   //配置文件新增属性
@@ -187,3 +189,4 @@ public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata,
 		}
 	}
 ```
+接下来我们看看ConfigurationPropertiesBindingPostProcessor是怎么实现绑定的。
