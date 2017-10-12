@@ -59,6 +59,7 @@ category_map:
   数据库: database
   java基础: java base
   java框架: java framework
+  个人心得: person idea
 tag_map:
   druid: driud
   spring-boot: spring-boot
