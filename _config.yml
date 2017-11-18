@@ -59,7 +59,6 @@ category_map:
   数据库: database
   java基础: java base
   java框架: java framework
-  个人心得: person idea
 tag_map:
   druid: driud
   spring-boot: spring-boot
@@ -90,6 +89,6 @@ theme: hexo-theme-next
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git #部署类型，使用github
-  repository: https://github.com/xkupc/xkupc.github.io.git #部署的仓库的SSH
+  repository: git@github.com:xkupc/xkupc.github.io.git #部署的仓库的SSH
   branch: master #部署分支， 一般使用master主分支
   message: update #默认类型
