@@ -2,7 +2,7 @@
 title: 神奇的springboot注解
 date: 2017-09-21 14:28:42
 tags: [spring,spring-boot]
-categories: springboot
+categories: java framework
 ---
 ## 简介
 小编接触springboot的时间很短，平时也就拿着已经成熟的框架，写着无关痛痒的业务代码，在看druid的源码的时候，涉猎了很多注解，发现通过简单的一个注解，使大量的配置属性初始化到bean里，对我这种还停留在@value级别的小白来说简直大开眼界了。今天想着介绍一下springboot里我刚刚学到的几个厉害的注解。
