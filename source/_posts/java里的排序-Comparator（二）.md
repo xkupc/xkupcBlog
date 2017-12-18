@@ -8,7 +8,7 @@ categories: 排序算法
 上一篇讲到了list集合排序用到的Cellection.sort使用了归并排序，今天我们来研究一下java里是怎么样实现的归并排序。这里使用jdk的版本是jdk1.8的版本。
 ### 源码
 我们看到Cellection.sort回调了list的sort方法，该方法在java.util里面：
-```
+```java
 default void sort(Comparator<? super E> c) {
         Object[] a = this.toArray();
         Arrays.sort(a, (Comparator) c);
@@ -20,7 +20,7 @@ default void sort(Comparator<? super E> c) {
     }
 ```
 这里有调用了Array.sort方法进行排序，Array是什么样的存在呢。我们看这个类的说明：
-```
+```java
  * This class contains various methods for manipulating arrays (such as
  * sorting and searching). This class also contains a static factory
  * that allows arrays to be viewed as lists.
@@ -28,7 +28,7 @@ default void sort(Comparator<? super E> c) {
 我们稍稍可以窥探一点list集合底层的实现原理-数组实现。Array提供了数组的排序和搜索操作，同时提供了工厂方法让数组以列表的形式展示。
 <!--more--->
 继续往下走:
-```
+```java
  public static <T> void sort(T[] a, Comparator<? super T> c) {
         if (c == null) {
             sort(a);
@@ -41,7 +41,7 @@ default void sort(Comparator<? super E> c) {
     }
 ```
 这里有一个标示位,我们看看这个标示位含义：
-```
+```java
  /**
      * Old merge sort implementation can be selected (for
      * compatibility with broken comparators) using a system property.
@@ -59,7 +59,7 @@ default void sort(Comparator<? super E> c) {
 TimSort在归并排序的基础上做了大量的优化，是一种复杂的排序算法，既然legacyMergeSort是老版本，那么相对低阶一点，OK,我们先从低阶学起。
 ### legacyMergeSort
 直接进入legacyMergeSort里调用的mergeSort方法：
-```
+```java
 /**
      * Src is the source array that starts at index 0
      * Dest is the (possibly larger) array destination with a possible offset
@@ -117,7 +117,7 @@ TimSort在归并排序的基础上做了大量的优化，是一种复杂的排�
 优化点5：合并子序列的循环中，p,q分别代表两个子序列的起始值。当一个序列元素全部填充到目标集合后，直接将另一个序列剩余元素填充到目标集合。
 ### 归并排序优化
 根据java里低阶的归并优化版本，将上一篇的归并排序进行优化
-```
+```java
    private static final int INSERTSORT_THRESHOLD = 7;
 
     public int[] legacyMergeSore(int[] num, int left, int right) {

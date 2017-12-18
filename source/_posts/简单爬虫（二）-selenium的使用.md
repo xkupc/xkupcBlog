@@ -9,7 +9,7 @@ categories: springboot
 ### selenium
 selenium是一款自动化测试工具，通过它我们可以通过代码的来模拟操控浏览器鼠标来获取我们想要的数据。今天我们来模拟一下自动登录腾讯视频。使用selenium我们需要引入依赖：
 <!--more-->
-```
+```js
  <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
@@ -33,7 +33,7 @@ selenium是一款自动化测试工具，通过它我们可以通过代码的来
 注意这里也是有坑的，chromedriver一定要和你使用的浏览器版本有对应关系，小编在这里呗坑了好久。这里我给出一个网上的大神出的映射表：http://blog.csdn.net/huilan_same/article/details/51896672
 第三个坑就是启动selenium的时候，由于其socket端口可能超过window默认允许的最大端口号大小（win7可能会有），需要在系统配置里设置一下最大端口号。具体操作的说明地址，小编忘记了。。。。
 ### 代码
-```
+```java
 public void login() {
         WebDriver driver;
 

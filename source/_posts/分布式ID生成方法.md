@@ -20,7 +20,7 @@ categories: person idea
 每一个应用通过应用名和环境配置注册一个父节点，而应用集群里的多个节点则通过ip和端口注册为多个子节点。这样多个子节点的workerId就随注册的先后顺序而递增。
 ## 方案
 对于zookeeper的连接和使用采用CuratorFramework，pom依赖：
-```
+```js
     <dependency>
         <groupId>org.apache.curator</groupId>
             <artifactId>curator-framework</artifactId>
@@ -39,7 +39,7 @@ categories: person idea
     </dependency>
 ```
 zookeeper连接实体：
-```
+```java
 public class ZookeeperProfile {
     /**
      * 应用的ip
@@ -78,7 +78,7 @@ public class ZookeeperProfile {
 }
 ```
 获取workerId主要方法：
-```
+```java
  @Override
     public Long getWorkId(String name, String ipAndPort) throws Exception {
         if (Strings.isNullOrEmpty(name)) {

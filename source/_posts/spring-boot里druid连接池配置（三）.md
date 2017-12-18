@@ -8,7 +8,7 @@ categories: java中间件
 上一篇我们知道druid实现监控的大致原理，今天我们学习一下，druid数据库连接池的实现。
 ### 数据库连接池配置
 首先我们来看一下数据库数据源的初始化配置：
-```
+```java
     /**
      * 主数据源
      */
@@ -24,7 +24,7 @@ categories: java中间件
 ![druid-spring-boot-starter代码结构](/images/druid/druid-spring-boot-starter.png)
 从图中我们看到，这个包很简单，主要做了两个事，一个是通过springboot的数据源初始化机制初始化自己的数据源，通过DruidDataSourceWrapper兼容springboot的数据源配置，第二个是通过springboot的注解机制，通过配置初始化自定义的系列Filter。
 是的，我们也可以通过配置文件配置我们上篇文章提到的statViewServlet和webStatFilter。
-```
+```java
 //初始化statViewServlet
 spring.datasource.druid.stat-view-servlet.enabled
 //初始化webStatFilter
@@ -38,7 +38,7 @@ DataSourceProperties这个则加载了数据源的配置属性，然后通过Dat
 DruidDataSourceWrapper则完成了数据库连接池相关的配置，我们看到它继承了DruidDataSource。
 ### 数据库连接池初始化
 druid通过springboot加载完配置后，连接池是如何初始化的呢？
-```
+```java
    public DruidDataSource(boolean fairLock){
         super(fairLock);
 

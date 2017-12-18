@@ -10,7 +10,7 @@ categories: java framework
 在介绍厉害的之前我们先来入个门，这个注解在spring里就已经存在了，是spring用来替代通过xml配置bean的繁琐方式的。在spring里使用这个注解，我们需要在xml里指定扫描的路径，而在springboot里我们就完全不用指定，只要保证springboot启动入口的路径包含了注解所在的包就可以了。在springboot里这个注解一般用来在系统启动时初始化系统数据源，数据库中间件等一些系统配置项。
 下面我们通过一个例子来看看：
 <!--more-->
-```
+```java
 @Configuration
 public class UserConfig {
     @Value("${user.name}")
@@ -45,7 +45,7 @@ public class UserConfig {
 ## ConfigurationProperties、EnableConfigurationProperties
 有了上面Configuration的基础，我们来看看ConfigurationProperties是做了些啥呢。
 修改一下baseModel实体类和UserConfig配置类
-```
+```java
 //使用ConfigurationProperties注解，设置配置文件里关联属性的key的前缀
 @ConfigurationProperties(prefix = "user")
 public class BaseModel{
@@ -106,14 +106,14 @@ public class UserConfig {
 ```
 测试结果依旧是baseModel按配置初始化成功
 当我把baseModel里的get、set方法删除时，就初始化不了，很明显，这里依旧还是反射，看官们可能觉得你也可以这么做，容我贴一下我的配置文件：
-```
+```java
 user.user-name = test
 user.user-age = 12
 user.cityId = 330600
 user.proviceId =331000
 ```
 就问你惊不惊喜，意不意外。属性的key与baseModel里的属性名没有直接映射，springboot支持“-”别名映射。如果我在baseModel里增加另一个类的依赖呢。
-```
+```java
 
   //在BaseModel里新增一个实体类属性
   private UserCompany workCompany;
@@ -134,7 +134,7 @@ user.proviceId =331000
 ```
 依旧初始化成功。是时候看一波源码了。
 打开EnableConfigurationProperties，我可以看到他引入一个EnableConfigurationPropertiesImportSelector,接下来我们看看这个Selector都做了些啥
-```
+```java
 public String[] selectImports(AnnotationMetadata metadata) {
 		MultiValueMap<String, Object> attributes = metadata.getAllAnnotationAttributes(
 				EnableConfigurationProperties.class.getName(), false);
@@ -154,7 +154,7 @@ public String[] selectImports(AnnotationMetadata metadata) {
 	}
 ```
 我们看ConfigurationPropertiesBeanRegistrar里的方法
-```
+```java
 public void registerBeanDefinitions(AnnotationMetadata metadata,
 				BeanDefinitionRegistry registry) {
 			MultiValueMap<String, Object> attributes = metadata
@@ -174,7 +174,7 @@ public void registerBeanDefinitions(AnnotationMetadata metadata,
 		}
 ```
 ConfigurationPropertiesBindingPostProcessorRegistrar里的方法
-```
+```java
 public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata,
 			BeanDefinitionRegistry registry) {
 		if (!registry.containsBeanDefinition(BINDER_BEAN_NAME)) {
@@ -190,11 +190,11 @@ public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata,
 	}
 ```
 接下来我们看看ConfigurationPropertiesBindingPostProcessor是怎么实现绑定的。查看了<a href="https://docs.spring.io/spring-boot/docs/1.4.7.RELEASE/api/" target="_blank">springboot的官方api</a>,我们可以看到这样一句话：
-```
+```java
 BeanPostProcessor to bind PropertySources to beans annotated with ConfigurationProperties.
 ```
 通过BeanPostProcessor接口实现配置资源和实体类的绑定。在ConfigurationPropertiesBindingPostProcessor的方法中，我们只要找到实现了BeanPostProcessor的方法即可找到绑定的实现。ok，我们看到BeanPostProcessor有postProcessBeforeInitialization和postProcessAfterInitialization方法，看方法名我们大概有个模糊的认识，应该是在bean初始化前后的操作。我们看postProcessBeforeInitialization这个方法。
-```
+```java
 private void postProcessBeforeInitialization(Object bean, String beanName, ConfigurationProperties annotation) {
         PropertiesConfigurationFactory<Object> factory = new PropertiesConfigurationFactory(bean);
         factory.setPropertySources(this.propertySources);

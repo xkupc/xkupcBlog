@@ -8,7 +8,7 @@ categories: 排序算法
 上一篇研究了List.sort()采用的老版归并排序方法-legacyMergeSort，今天研究一下经过复杂优化的排序方法-TimSort，算法有点复杂，慢慢磨。思路最重要。
 ## 源码
 直接进入TimSort.sort方法：
-```
+```java
 static <T> void sort(T[] a, int lo, int hi, Comparator<? super T> c,
                          T[] work, int workBase, int workLen) {
         assert c != null && a != null && lo >= 0 && lo <= hi && hi <= a.length;
@@ -64,7 +64,7 @@ static <T> void sort(T[] a, int lo, int hi, Comparator<? super T> c,
 排序规则comparator c
 我们先来通过源码理清是如何实现的排序的，再来分析TimeSort的实现原理。
 ### 1.校验是否满足binarySort规则
-```
+```java
 int nRemaining  = hi - lo;
         if (nRemaining < 2)
             return;
@@ -79,7 +79,7 @@ int nRemaining  = hi - lo;
     （2）当元素数量小于MIN_MERGE（为常量32）时，采用binarySort排序。（稍后在分析）
 ### 2.分配空间
 构造TimeSort实例，初始化分片的内存空间和归并时的临时空间，这里分配空间是也根据目标数组的长度做了最适合的分配。
-```
+```java
  TimSort<T> ts = new TimSort<>(a, c, work, workBase, workLen);
   
   private TimSort(T[] a, Comparator<? super T> c, T[] work, int workBase, int workLen) {
@@ -117,7 +117,7 @@ int minRun = minRunLength(nRemaining);
 ### 4.do while
 do while循环里每次获取一个升序的分片长度，判断该长度是否小于最小分片长度，小于最小长度，使用binarySort排序。
 分析一下binarySort排序：
-```
+```java
 private static <T> void binarySort(T[] a, int lo, int hi, int start,
                                        Comparator<? super T> c) {
         assert lo <= start && start <= hi;
@@ -165,7 +165,7 @@ private static <T> void binarySort(T[] a, int lo, int hi, int start,
 ```
 我们可以看到binarySort对一个升序的分片进行了扩展，使它扩展到最小分片长度，并使用二分法对扩展分片进行排序。进入binarySort时，目标数组从lo到start是有序的，只需要将start到hi的元素通过二分法定位插入到已有序的序列中，这样整个从lo到hi就有序了。
 接着通过runBase和runLen记录该分片的起始位置和长度
-```
+```java
     ts.pushRun(lo, runLen);
 
     private void pushRun(int runBase, int runLen) {
@@ -176,14 +176,14 @@ private static <T> void binarySort(T[] a, int lo, int hi, int start,
 
 ```
 然后就可以尝试着将多个分片进行归并了：
-```
+```java
     ts.mergeCollapse();
 
     lo += runLen;
     nRemaining -= runLen;
 ```
 我们来看mergeCollapse这个函数，这是TimSort的核心算法
-```
+```java
  private void mergeCollapse() {
         while (stackSize > 1) {
             int n = stackSize - 2;
@@ -200,13 +200,13 @@ private static <T> void binarySort(T[] a, int lo, int hi, int start,
     }
 ```
 这里有两个条件的判断：当多个分片长度不满足以下条件是，合并分片被执行：
-```
+```java
   1.runLen[i - 3] > runLen[i - 2] + runLen[i - 1]    
   2.runLen[i - 2] > runLen[i - 1]
 ```
 我们可以这么理解，当条件1不被满足时，runLen[i - 2] ，runLen[i - 1]合并，合并之后，那么条件2也就不能被满足，继续合并。
 继续看mergeAt的归并过程：
-```
+```java
 private void mergeAt(int i) {
         assert stackSize >= 2;
         assert i >= 0;

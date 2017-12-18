@@ -9,7 +9,7 @@ categories: 排序算法
 
 ### 实现Comparator
 java8之前，我们对list排队多半是实现一个Comparator接口，先定义一个简单的实体类:
-```
+```java
 public class Person {
 
     private String name;
@@ -24,7 +24,7 @@ public class Person {
 ```
 <!--more-->
 然后我们根据name对一个person列表进行简单的排序：
-```
+```java
 public class ComparatorService extends BaseTestService{
 
     private List<Person> personList;
@@ -62,14 +62,14 @@ java8为Comparator提供了新的静态方法，例子：
         Collections.sort(personList,Comparator.comparing(Person::getName));
     }
 结果为默认是升序的，如果我们要反序呢，很简单，有个Comparator有一个反序的方法：reversed（）
-```
+```java
     @Test
     public void compareWithLamdaReversed(){
         Collections.sort(personList,Comparator.comparing(Person::getName).reversed());
     }
 ```
 扩展：Comparator还提供了支持多个比较条件的方法：
-```
+```java
     @Test
     public void compareWithLamdaMore(){
         Collections.sort(personList,Comparator.comparing(Person::getName).thenComparing(Person::getAge));
@@ -77,14 +77,14 @@ java8为Comparator提供了新的静态方法，例子：
 ```
 ### 使用Lambda表达式
 java8在java.util.List里新增了支持lambda的sort方法可以直接使用,代码更简洁：
-```
+```java
     @Test
     public void compareWithNewSort(){
        personList.sort((p1,p2)-> p1.getName().compareTo(p2.getName()));
     }
 ```
 当然这里也支持多条件排序的，我们可以在Person里自定义一个排序的静态方法：
-```
+```java
     public static int compareWithNameAndAge(Person p1, Person p2) {
         if (p1.getName().equals(p2.getName())) {
             return p1.getAge() - p2.getAge();

@@ -11,7 +11,7 @@ J2EE项目大部分都会涉及到数据库，为了提高操作数据库的性�
 ## 依赖配置
 小编使用了druid目前支持的集成spring-boot版本，主要的maven依赖如下：
 
-```
+```js
 <dependency>
     <groupId>com.alibaba</groupId>
     <artifactId>druid-spring-boot-starter</artifactId>
