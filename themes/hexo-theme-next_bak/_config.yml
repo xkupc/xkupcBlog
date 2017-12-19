@@ -115,6 +115,7 @@ social_icons:
 links:
   chenzhijun的小站: http://chenzhijun.github.com/
   duanlei的小站: http://duanlei.win/
+  wxy的小站: http://wxywyh.github.io
   我的淘宝优惠券: http://www.51gongzy.top/html/couponItemIndex.html?key=bW1fMTA3ODIxNjY5XzIyNzA4MzIwXzEzMzg5Mjk4NQ==
 # Sidebar Avatar
 # in theme directory(source/images): /images/avatar.gif
@@ -600,7 +601,7 @@ pace: false
 pace_theme: pace-theme-minimal
 
 # Canvas-nest
-canvas_nest: false
+canvas_nest: true
 
 # three_waves
 three_waves: false
