@@ -299,4 +299,4 @@ public class TestReceiver extends ReceiverHandler {
         testPublisher.testSimpleMq("hello world!");
     }
 ```
-这里只是简单介绍，源码可以到我的github上看看。
+这里只是简单介绍，源码可以到我的github上看看。https://github.com/xkupc/framework-parent
