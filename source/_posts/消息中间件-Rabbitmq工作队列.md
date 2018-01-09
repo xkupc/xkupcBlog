@@ -13,6 +13,30 @@ categories: Rabbitmq,消息中间件
 消费者手工ack
 ```java
 @Service
+public class SendmqServiceImpl implements SendmqService {
+
+    @Autowired
+    ConnectionFactory connectionFactory;
+
+    @Override
+    public void sendMq(String queuenceName, String message) {
+        try {
+            //创建连接
+            Connection connection = connectionFactory.newConnection();
+            Channel channel = connection.createChannel();
+            //声明一个队列,非永久的，非排他的，非自动删除的队列
+            channel.queueDeclare(queuenceName, false, false, false, null);
+            channel.exchangeDeclare("registerUser", BuiltinExchangeType.FANOUT);
+            channel.basicPublish("", queuenceName, MessageProperties.PERSISTENT_TEXT_PLAIN, message.getBytes("UTF-8"));
+            System.out.println("send message:" + message);
+            channel.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+@Service
 public class ReceivemqServiceImpl implements ReceivemqService {
     @Autowired
     ConnectionFactory connectionFactory;
